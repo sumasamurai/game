@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
-
+import Item from "./Item";
+import Points from "./Points";
+import Timer from "./Timer";
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -25,7 +27,7 @@ export default function MainWrapper() {
     const [points, setPoints] = useState(0);
     const [endTime, setEndTime] = useState(Date.now() + startingTimeLeft);
     const [seconds, setSeconds] = useState(getSeconds(endTime));
-  
+
     const itemClick = useCallback(
         (item) => {
             if (item.time) {
@@ -60,29 +62,69 @@ export default function MainWrapper() {
         }, 50);
     };
 
+    function bot() {
+        var items = [...document.getElementsByClassName("item")];
+        console.log("bot", { items });
+        if (items.length) {
+            const good = items.filter((f) => f.innerHTML !== "-1");
+            const selected = randomFromArray(good.length ? good : items);
+            selected.click();
+            setTimeout(bot, randomInteger(1, 600));
+        }
+    }
+
     return (
         <div className={classes.root}>
-            <Button variant="contained" color="primary" onClick={onStart}>
-                Старт
-            </Button>
-            <hr />
-            <Points points={points} />
-            <Timer>{isStarted ? seconds : "-"}</Timer>
+            <header>
+                <div className="button-group">
+                    <Button
+                        className="button-white"
+                        variant="outlined"
+                        onClick={onStart}
+                    >
+                        Start
+                    </Button>
+                    <Button
+                        className="button-green"
+                        variant="outlined"
+                        onClick={onStart}
+                    >
+                        New Game
+                    </Button>{" "}
+
+                    {isStarted &&
+                     <Button variant="outlined" color="secondary" onClick={bot}>
+                     (bot)
+                 </Button>
+                    }
+                     {!isStarted &&
+                     <Button variant="outlined" disabled>
+                     (bot)
+                 </Button>
+                    }
+                    
+                   
+                </div>
+
+                <div className="information">
+                    <Points points={points} />
+                    <h3>
+                        Time left:{" "}
+                        <span className="timer-count">
+                            <Timer>{isStarted ? seconds : "-"}</Timer>
+                        </span>
+                    </h3>
+                </div>
+            </header>
+
+           
             <Field isStarted={isStarted} itemClick={itemClick} />
+            <footer></footer>
         </div>
     );
 }
 
-function Points({ points }) {
-    return <div>{points}</div>;
-}
-
-function Timer(props) {
-    return <div>{props.children}</div>;
-}
-
-const itemColors = ["rgb(255, 50, 86)", "rgb(115, 33, 98)", "rgb(12, 23, 195)"];
-
+const itemColors = ["#9446ED", "#fff", "#92FDF2"];
 const sizes = [
     { width: 40, height: 40 },
     { width: 60, height: 60 },
@@ -101,23 +143,23 @@ const getNewItem = (width, height) => {
     const position = getRandomPosition(width, height, size.width, size.height);
     const item = {
         id: (Date.now() + Math.random() * 1000).toString(),
-        time: randomInteger(0,10) < 3 ? randomInteger(-1, 1) : 0,
+        time: randomInteger(0, 10) < 3 ? randomInteger(-1, 1) : 0,
         weight: randomInteger(1, 2),
         style: {
             ...size,
             ...position,
             background: randomFromArray(itemColors),
             position: "absolute",
-            opacity: randomInteger(40, 900) / 100,
         },
         handler: () => {},
     };
 
     if (item.time) {
-        item.style.background = "#EE0";
+        item.style.background = "#ffaa0f";
+        item.style.boxShadow =
+            "0 0 3px #ffa500, 0 0 8px #ffa500, 0 0 10px #ffa500, 0 0 20px #ffa500, 0 0 30px #ff0000, 0 0 5px #ff8d00, 0 0 50px #ff0000";
     }
 
-    // console.log({item});
     return item;
 };
 
@@ -149,20 +191,18 @@ function Field(props) {
         wrapperWidth = field.clientWidth;
         wrapperHeight = field.clientHeight;
     }
-    console.log({wrapperWidth, wrapperHeight, field });
 
     const [items, setItems] = useState([]);
 
     useEffect(() => {
         const field = document.getElementById("field");
 
-    let wrapperWidth = document.body.offsetWidth;
-    let wrapperHeight = document.body.offsetHeight - 200;
-    if (field) {
-        wrapperWidth = field.clientWidth;
-        wrapperHeight = field.clientHeight;
-    }
-    console.log({wrapperWidth, wrapperHeight, field });
+        let wrapperWidth = document.body.offsetWidth;
+        let wrapperHeight = document.body.offsetHeight - 200;
+        if (field) {
+            wrapperWidth = field.clientWidth;
+            wrapperHeight = field.clientHeight;
+        }
 
         if (!items.length && props.isStarted)
             setTimeout(() => {
@@ -192,12 +232,10 @@ function Field(props) {
             id="field"
             style={{
                 position: "relative",
-                backgroundImage: 'url("/space.jpg")',
-                backgroundSize: "cover",
-                backgroundPosition: "center",
             }}
         >
-            <img src="./screen.png"/>
+            <img src="./screen.png" className="screen-pc" alt="" />
+            <img src="./screen-mobile.png" className="screen-mobile" alt="" />
             {props.isStarted &&
                 items.map((item) => (
                     <Item key={item.id} item={item} handleClick={onItemClick} />
@@ -205,46 +243,3 @@ function Field(props) {
         </div>
     );
 }
-
-function Item({ item, handleClick }) {
-    let event = {};
-    if ('ontouchstart' in document.documentElement) {
-        event = { onTouchStart: () => handleClick(item) };
-    } else {
-        event = { onMouseDown: () => handleClick(item) };
-    }
-
-    return (
-        <div
-            className="item"
-            style={item.style}
-            { ...event }
-        >
-            {item.time ? `T${item.time}` : `+${item.weight}`}
-        </div>
-    );
-}
-
-function bot() {
-    var items = [...document.getElementsByClassName("item")];
-
-    function randomInteger(min, max) {
-        // получить случайное число от (min-0.5) до (max+0.5)
-        let rand = min - 0.5 + Math.random() * (max - min + 1);
-        return Math.round(rand);
-    }
-
-    function randomFromArray(array) {
-        return array[randomInteger(0, array.length - 1)];
-    }
-
-    if (items.length) {
-        var good = items.filter((f) => f.innerHTML !== "T-1");
-        var selected = randomFromArray(good.length ? good : items);
-
-        selected.click();
-        setTimeout(bot, randomInteger(1, 600));
-    }
-}
-
-// bot();

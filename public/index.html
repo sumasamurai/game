@@ -7,15 +7,64 @@
   <title>Game App</title>
 </head>
 <style>
-
   * {
     box-sizing: border-box;
+    line-height: normal;
   }
+
+  body {
+    background: #1c1c1c;
+    color: #ffffff;
+
+  }
+
+  .button-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .button-group button {
+    margin: 0 10px !important;
+    background: none;
+    opacity: 0.9;
+    transition: all 300ms auto;
+    border-radius: 30px !important;
+    white-space: nowrap;
+  }
+
+  .button-group button:hover {
+    opacity: 1;
+  }
+
+
+  .button-green {
+    color: #1CD4D4 !important;
+    border: 1px solid #1CD4D4 !important;
+  }
+  .button-white {
+   
+    border: 1px solid #fff !important;
+    color: #fff !important;
+  
+  
+  }
+
+
+  span {
+
+    opacity: 0.9;
+  }
+
+  #game {
+    margin: 10px;
+  }
+
   img {
     width: 100%;
     display: block;
   }
- 
+
   .item {
     display: flex;
     align-items: center;
@@ -23,12 +72,125 @@
     font-size: 18px;
     font-weight: 700;
     color: #121212;
+    border-radius: 4px;
   }
-  #field  {
-    
+
+  .item-time {
+    width: 60px;
+    height: 60px;
+    left: 25px;
+    top: 9px;
+    position: absolute;
+    box-shadow: 0 0 5px #ffa500, 0 0 15px #ffa500, 0 0 20px #ffa500, 0 0 40px #ffa500, 0 0 60px #ff0000, 0 0 10px #ff8d00, 0 0 98px #ff0000;
+    color: #fff6a9;
+    background: #ffaa0f;
+  }
+
+  #field {
+    position: relative;
+   
+    border-radius: 4px;
     padding: 0;
     margin: 0;
+    background: #1c1c1c;
+box-shadow: inset 7px 7px 8px #181818, 
+            inset -7px -7px 8px #202020;
   }
+
+  .scale-in-center {
+
+    animation: scale-in-center 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+  }
+
+  @keyframes scale-in-center {
+    0% {
+      -webkit-transform: scale(0);
+      transform: scale(0);
+      opacity: 0;
+    }
+
+    100% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .timer-count {
+    text-shadow: 0 0 5px #ffa500, 0 0 15px #ffa500, 0 0 20px #ffa500, 0 0 40px #ffa500, 0 0 60px #ff0000, 0 0 10px #ff8d00, 0 0 98px #ff0000;
+    color: #ffaa0f;
+    ;
+    animation: blinksale 10s infinite;
+  }
+
+  .screen-pc {
+    display: block;
+  }
+
+  .screen-mobile {
+    display: none;
+  }
+
+  @media (max-width: 1280px) {
+    .screen-pc {
+      display: none;
+    }
+
+    .screen-mobile {
+      display: block;
+    }
+  }
+.information {
+  display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+    
+}
+
+
+.information h3 {
+  text-align: center;
+ color: #fff;
+    
+}
+.information h3 span {
+  
+  display: block;
+  font-size: 24px;
+ 
+}
+.points-count {
+  color: #c6e2ff;
+  text-shadow: 0 0 3px rgba(202, 228, 225, 0.92), 0 0 15px rgba(202, 228, 225, 0.34), 0 0 6px rgba(30, 132, 242, 0.52), 0 0 10px rgba(30, 132, 242, 0.92), 0 0 17px rgba(30, 132, 242, 0.78), 0 0 27px rgba(30, 132, 242, 0.92);
+  font-size: 18px;
+}
+
+  @keyframes blinksale {
+
+    20%,
+    24%,
+    55% {
+      color: #111;
+      text-shadow: none;
+    }
+
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+      /*     color: #fccaff;
+      text-shadow: 0 0 5px #f562ff, 0 0 15px #f562ff, 0 0 25px #f562ff,
+        0 0 20px #f562ff, 0 0 30px #890092, 0 0 80px #890092, 0 0 80px #890092; */
+      text-shadow: 0 0 2px #ffa500, 0 0 7px #ffa500, 0 0 10px #ffa500, 0 0 20px #ffa500, 0 0 30px #ff0000, 0 0 5px #ff8d00, 0 0 50px #ff0000;
+      color: #fff6a9;
+    }
+  }
+
+  /*# sourceMappingURL=neon.css.map */
 </style>
 
 <body>
