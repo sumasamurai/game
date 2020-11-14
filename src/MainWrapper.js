@@ -14,8 +14,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 // Timer "fps"
-const timerUpdatingPeriod = 100;
-const startTimeBallance = 5;
+const timerUpdatingPeriod = 77;
+const startTimeBallance = 20;
 
 export default function MainWrapper() {
     const classes = useStyles();
@@ -147,13 +147,6 @@ function ResultTable(props) {
     )
 }
 
-const itemColors = ["#9446ED", "#fff", "#92FDF2"];
-const sizes = [
-    { width: 40, height: 40 },
-    { width: 60, height: 60 },
-    { width: 80, height: 80 },
-];
-
 const getRandomPosition = (wrapperWidth, wrapperHeight, width, height) => {
     return {
         left: randomInteger(0, wrapperWidth - width),
@@ -175,28 +168,101 @@ date.setDate(date.getDate() + 7);
     )
 }
 
+const defaultGameItems = [
+    {
+        type: '+1',
+        probability: 10,
+        time: 0,
+        weight: 1,
+        style: { 
+            width: 80, 
+            height: 80,
+            background: '#fff',
+            color: '#333',
+        },
+    },
+    {
+        type: '+2',
+        probability: 8,
+        time: 0,
+        weight: 2,
+        style: { 
+            width: 60, 
+            height: 60,
+            background: '#faa',
+            color: '#333',
+            opacity: 0.4,
+        },
+    },
+    {
+        type: 'T+1',
+        probability: 6,
+        time: 1,
+        weight: 0,
+        style: { 
+            width: 40, 
+            height: 40,
+            background: '#ffe',
+            color: '#033',
+            boxShadow:
+            "0 0 3px #ffa500",
+        },
+    },
+    {
+        type: 'T-1',
+        probability: 4,
+        time: -1,
+        weight: 0,
+        style: { 
+            width: 60,
+            height: 60,
+            background: '#afa',
+            color: '#033',
+            boxShadow:
+            "0 0 3px #ffa500",
+        },
+    }
+];
+
+const getProbability = (items) => {
+    const entity = [];
+    items.forEach((item) => {
+        for (let i=0; i<item.probability; i++) {
+            entity.push(item);
+        }
+    });
+
+    console.log({ entity });
+    return entity;
+};
+
 const getNewItem = (width, height) => {
-    const size = randomFromArray(sizes);
-    const position = getRandomPosition(width, height, size.width, size.height);
+    const itemType = randomFromArray(
+        getProbability(
+            defaultGameItems
+        )
+    );
+
+    const position = 
+        getRandomPosition(
+            width, 
+            height, 
+            itemType.style.width, 
+            itemType.style.height
+        );
+
     const item = {
         id: (Date.now() + Math.random() * 1000).toString(),
-        time: randomInteger(0, 10) < 3 ? randomInteger(-1, 1) : 0,
-        weight: randomInteger(1, 2),
+        ...itemType,
         style: {
-            ...size,
+            ...itemType.style,
             ...position,
-            background: randomFromArray(itemColors),
-            position: "absolute",
+            position: 'absolute',
         },
         handler: () => {},
     };
 
-    if (item.time) {
-        item.style.background = "#ffaa0f";
-        item.style.boxShadow =
-            "0 0 3px #ffa500, 0 0 8px #ffa500, 0 0 10px #ffa500, 0 0 20px #ffa500, 0 0 30px #ff0000, 0 0 5px #ff8d00, 0 0 50px #ff0000";
-    }
-
+    console.log(item);
     return item;
 };
 
