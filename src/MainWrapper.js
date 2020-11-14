@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
 
 // Timer "fps"
 const timerUpdatingPeriod = 100;
-const startTimeBallance = 60;
+const startTimeBallance = 5;
 
 export default function MainWrapper() {
     const classes = useStyles();
@@ -25,6 +25,8 @@ export default function MainWrapper() {
 
     const [isStarted, setIsStarted] = useState(false);
     const [points, setPoints] = useState(0);
+    const [gameover, setGameover] = useState(false)
+    const [countBot, setCountBot] = useState(0)
     const [endTime, setEndTime] = useState(Date.now() + startingTimeLeft);
     const [seconds, setSeconds] = useState(getSeconds(endTime));
 
@@ -48,7 +50,8 @@ export default function MainWrapper() {
                 } else {
                     setSeconds(0);
                     clearInterval(interval);
-                    alert("You WIN!");
+                    setGameover(true)
+                   
                 }
             }, timerUpdatingPeriod);
             return () => clearInterval(interval);
@@ -63,8 +66,9 @@ export default function MainWrapper() {
     };
 
     function bot() {
+       
         var items = [...document.getElementsByClassName("item")];
-        console.log("bot", { items });
+       
         if (items.length) {
             const good = items.filter((f) => f.innerHTML !== "-1");
             const selected = randomFromArray(good.length ? good : items);
@@ -93,8 +97,11 @@ export default function MainWrapper() {
                     </Button>{" "}
 
                     {isStarted &&
-                     <Button variant="outlined" color="secondary" onClick={bot}>
-                     (bot)
+                     <Button variant="outlined" color="secondary" onClick={() => {
+                         bot()
+                        setCountBot(countBot + 1)
+                     }}>
+                     bot<span className="count-bot"> ({countBot})</span>
                  </Button>
                     }
                      {!isStarted &&
@@ -120,8 +127,24 @@ export default function MainWrapper() {
            
             <Field isStarted={isStarted} itemClick={itemClick} />
             <footer></footer>
+           
+               
+        
+           
         </div>
     );
+}
+
+function ResultTable(props) {
+
+     
+    return (
+        <nav id="result-table">
+            {/* {
+                lists
+            } */}
+        </nav>
+    )
 }
 
 const itemColors = ["#9446ED", "#fff", "#92FDF2"];
@@ -137,6 +160,20 @@ const getRandomPosition = (wrapperWidth, wrapperHeight, width, height) => {
         top: randomInteger(0, wrapperHeight - height),
     };
 };
+
+
+function GameOver() {
+    let date = window.localStorage.getItem("date");
+// Initialize the date object as a date object again here
+date = new Date(date);
+date.setDate(date.getDate() + 7);
+    return (
+        <aside id="gameover">
+            {/* <h3>Gameover</h3> */}
+            {/* {date} */}
+        </aside>
+    )
+}
 
 const getNewItem = (width, height) => {
     const size = randomFromArray(sizes);
@@ -240,6 +277,7 @@ function Field(props) {
                 items.map((item) => (
                     <Item key={item.id} item={item} handleClick={onItemClick} />
                 ))}
+                 <GameOver />
         </div>
     );
 }
