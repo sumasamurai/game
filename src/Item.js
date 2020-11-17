@@ -1,6 +1,7 @@
 import React from "react";
 
 function Item({ item, handleClick }) {
+
     let event = {};
     if ("ontouchstart" in document.documentElement) {
         event = { onTouchStart: () => handleClick(item) };
@@ -13,7 +14,7 @@ function Item({ item, handleClick }) {
             className="item scale-in-center "
             style={item.style}
             {...event}
-            onClick={() => handleClick(item)}
+            onClick={() => { handleClick(item); }}
         >
             {item.time ? `T${item.time}` : `+${item.weight}`}
         </div>

@@ -1,0 +1,27 @@
+.result {
+    max-width: 350px;
+    padding: 35px;
+    border-radius: 4px;
+    background: #1c1c1c;
+    box-shadow: inset 7px 7px 8px #181818, inset -7px -7px 8px #202020;
+}
+
+.title {
+    color: #fff;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.list {
+    padding: 0;
+}
+.list li{
+    background: #ffffff12;
+    padding: 7px 15px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    margin: 3px 0;
+}
+
+
