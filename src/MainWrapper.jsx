@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import styles from "./MainWrapper.module.css";
-import Result from "../Result";
-import GameOver from "../GameOver";
-import Field from "../Field";
-import { randomFromArray, randomInteger } from "../../utils";
+import Result from "./Result";
+import GameOver from "./GameOver";
+import Field from "./Field";
+import { randomFromArray, randomInteger } from "./utils";
 import Button from "@material-ui/core/Button";
 import Tutorial from "./Tutorial";
 import SessionStatus from "./SessionStatus";
 
 // Timer "fps"
 const timerUpdatingPeriod = 70;
-const startTimeBallance = 5;
-
+const startTimeBallance = 60;
+let timerInterval = null;
 
 export default function MainWrapper() {
     const [results, setResults] = useState(
@@ -27,7 +27,7 @@ export default function MainWrapper() {
     const [endTime, setEndTime] = useState(Date.now() + startingTimeLeft);
     const [seconds, setSeconds] = useState(getSeconds(endTime));
     const [pausedTimeBallance, setPausedTimeBallance] = useState(0);
-    let timerInterval = null;
+   
     let botTimer;
 
     const itemClick = useCallback(
@@ -52,11 +52,12 @@ export default function MainWrapper() {
                     setGameOver(true);
                 }
             }, timerUpdatingPeriod);
+            return () => {
+                clearInterval(timerInterval);
+                timerInterval = null;
+            };
         }
-        return () => {
-            clearInterval(timerInterval);
-            timerInterval = null;
-        };
+       
     }, [endTime, isStarted, pausedTimeBallance]);
 
     const onStart = (e) => {

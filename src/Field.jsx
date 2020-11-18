@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback } from "react";
-import FieldItem from "../FieldItem/FieldItem";
+import FieldItem from "./FieldItem";
 import styles from "./Field.module.css";
-import { getRandomPosition, randomInteger, randomFromArray } from "../../utils";
+import { getRandomPosition, randomInteger, randomFromArray } from "./utils";
 
 export default function Field(props) {
     const field = document.getElementById("field");
     let wrapperWidth = document.body.offsetWidth;
     let wrapperHeight = document.body.offsetHeight - 200;
+    
     if (field) {
         wrapperWidth = field.clientWidth;
         wrapperHeight = field.clientHeight;
@@ -24,7 +25,7 @@ export default function Field(props) {
             wrapperHeight = field.clientHeight;
         }
 
-        if (!items.length && props.isStarted)
+        if (!items.length && props.isStarted) 
             setTimeout(() => {
                 setItems(getNewItems(3, 0, wrapperWidth, wrapperHeight));
             }, 100);
