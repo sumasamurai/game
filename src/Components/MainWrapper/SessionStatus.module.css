@@ -1,0 +1,59 @@
+.session_status {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px;
+}
+
+
+.session_status h3 {
+    text-align: center;
+    color: #fff;
+}
+
+.session_status h3 span {
+    display: block;
+    font-size: 24px;
+}
+
+.points_count {
+    color: #c6e2ff;
+    text-shadow: 0 0 3px rgba(202, 228, 225, 0.92), 0 0 15px rgba(202, 228, 225, 0.34), 0 0 6px rgba(30, 132, 242, 0.52), 0 0 10px rgba(30, 132, 242, 0.92), 0 0 17px rgba(30, 132, 242, 0.78), 0 0 27px rgba(30, 132, 242, 0.92);
+    font-size: 18px;
+}
+
+
+.timer_count {
+    text-shadow: 0 0 5px #ffa500, 0 0 15px #ffa500, 0 0 20px #ffa500, 0 0 40px #ffa500, 0 0 60px #ff0000, 0 0 10px #ff8d00, 0 0 98px #ff0000;
+    color: #ffaa0f;
+    ;
+    animation: blinksale 10s infinite;
+}
+
+@keyframes blinksale {
+
+    20%,
+    24%,
+    55% {
+        color: #111;
+        text-shadow: none;
+    }
+
+    0%,
+    19%,
+    21%,
+    23%,
+    25%,
+    54%,
+    56%,
+    100% {
+
+        text-shadow: 0 0 2px #ffa500, 0 0 7px #ffa500, 0 0 10px #ffa500, 0 0 20px #ffa500, 0 0 30px #ff0000, 0 0 5px #ff8d00, 0 0 50px #ff0000;
+        color: #fff6a9;
+    }
+}
+
+@media (max-width:768px) {
+    .session_status h3 {
+        margin: 5px 0;
+    }
+}

@@ -1,6 +1,8 @@
 import React from "react";
+import "./FieldItem.css";
 
-function Item({ item, handleClick }) {
+function FieldItem(props) {
+    const { item, handleClick } = props;
 
     let event = {};
     if ("ontouchstart" in document.documentElement) {
@@ -11,14 +13,16 @@ function Item({ item, handleClick }) {
 
     return (
         <div
-            className="item scale-in-center "
+            className="field_item"
             style={item.style}
             {...event}
-            onClick={() => { handleClick(item); }}
+            onClick={() => {
+                handleClick(item);
+            }}
         >
             {item.time ? `T${item.time}` : `+${item.weight}`}
         </div>
     );
 }
 
-export default Item;
+export default FieldItem;

@@ -1,0 +1,41 @@
+.tutorial {
+    display: grid;
+    grid-template-columns: 60px 1fr;
+    height: max-content;
+    align-items: center;
+    font-size: 16px;
+    grid-row: 1/3;
+    grid-column: 2;
+}
+
+.text {
+    color: #697098;
+}
+
+.icon {
+    color: #697098;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+    border: 1px solid #697098;
+}
+
+@media (max-width:768px) {
+    .tutorial {
+        max-width: 90%;
+        margin: 10px auto;
+        grid-template-columns: 50px 1fr;
+        grid-row: auto;
+        grid-column: auto;
+    }
+    .icon {
+        width: 40px;
+        height: 40px;
+    }
+    .text {
+        font-size: 11px;
+    }
+}

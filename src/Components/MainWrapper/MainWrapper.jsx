@@ -1,41 +1,19 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import styles from "./MainWrapper.module.css";
+import Result from "../Result";
+import GameOver from "../GameOver";
+import Field from "../Field";
+import { randomFromArray, randomInteger } from "../../utils";
 import Button from "@material-ui/core/Button";
-import randomInteger from "./randomInteger";
-import Instruction from "./Instruction";
-import Result from "./Result";
-import GameOver from "./GameOver";
-import Points from "./Points";
-import Timer from "./Timer";
-import Field from "./Field";
-import randomFromArray from './randomFromArray';
-import styles from './MainWrapper.module.css';
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: "grid",
-        gridTemplateColumns: "1fr 400px",
-        gridGap: "35px",
-        form: {
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-        },
-        "& > *": {
-            margin: theme.spacing(1),
-        },
-       
-    },
-}));
+import Tutorial from "./Tutorial";
+import SessionStatus from "./SessionStatus";
 
 // Timer "fps"
 const timerUpdatingPeriod = 70;
 const startTimeBallance = 5;
-let timerInterval = null;
+
 
 export default function MainWrapper() {
-    const classes = useStyles();
     const [results, setResults] = useState(
         JSON.parse(JSON.stringify(localStorage))
     );
@@ -45,10 +23,12 @@ export default function MainWrapper() {
     const [points, setPoints] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [countBot, setCountBot] = useState(0);
+    const countRef = useRef(countBot);
     const [endTime, setEndTime] = useState(Date.now() + startingTimeLeft);
     const [seconds, setSeconds] = useState(getSeconds(endTime));
-
     const [pausedTimeBallance, setPausedTimeBallance] = useState(0);
+    let timerInterval = null;
+    let botTimer;
 
     const itemClick = useCallback(
         (item) => {
@@ -60,7 +40,6 @@ export default function MainWrapper() {
         },
         [points, endTime]
     );
-
     useEffect(() => {
         if (!timerInterval && isStarted) {
             timerInterval = setInterval(() => {
@@ -73,16 +52,19 @@ export default function MainWrapper() {
                     setGameOver(true);
                 }
             }, timerUpdatingPeriod);
-            return () => {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            };
         }
+        return () => {
+            clearInterval(timerInterval);
+            timerInterval = null;
+        };
     }, [endTime, isStarted, pausedTimeBallance]);
 
     const onStart = (e) => {
-        setSeconds(startTimeBallance);
+        countRef.current = 0;
+
         setTimeout(() => {
+            setSeconds(startTimeBallance);
+            clearTimeout(botTimer);
             setResults(JSON.parse(JSON.stringify(localStorage)));
             setCountBot(0);
             setPoints(0);
@@ -93,6 +75,11 @@ export default function MainWrapper() {
         }, 50);
     };
 
+    const onBot = () => {
+        setCountBot(countBot + 1);
+        countRef.current = countBot + 1;
+        bot();
+    };
     const toggleGameOver = useCallback(() => {
         setGameOver((state) => !state);
     }, []);
@@ -103,29 +90,28 @@ export default function MainWrapper() {
             setSeconds(pausedTimeBallance);
         } else {
             const timeLeft = getSeconds(endTime);
-
             setSeconds(timeLeft);
             setPausedTimeBallance(timeLeft);
         }
     };
 
     function bot() {
-        const items = [...document.getElementsByClassName("item")];
+        const items = [...document.getElementsByClassName("field_item")];
 
-        if (items.length) {
+        if (items.length && countRef.current > 0) {
             const good = items.filter((f) => f.innerHTML !== "-1");
             const selected = randomFromArray(good.length ? good : items);
             selected.click();
-            setTimeout(bot, randomInteger(1, 600));
+            botTimer = setTimeout(bot, randomInteger(1, 600));
         }
     }
 
     return (
-        <div className={classes.root}>
-            <header>
-                <div className="button-group">
+        <div className={styles.wrapper}>
+            <header className={styles.header}>
+                <div className={styles.buttons}>
                     <Button
-                        className="button-white"
+                        className={styles.button_white}
                         variant="outlined"
                         onClick={onStart}
                     >
@@ -134,7 +120,7 @@ export default function MainWrapper() {
 
                     {!isStarted && (
                         <Button
-                            className="button-white"
+                            className={styles.button_white}
                             variant="outlined"
                             onClick={onStart}
                         >
@@ -143,7 +129,7 @@ export default function MainWrapper() {
                     )}
                     {isStarted && (
                         <Button
-                            className="button-green"
+                            className={styles.button_green}
                             variant="outlined"
                             onClick={onPause}
                         >
@@ -155,32 +141,24 @@ export default function MainWrapper() {
                         <Button
                             variant="outlined"
                             color="secondary"
-                            onClick={() => {
-                                bot();
-                                setCountBot(countBot + 1);
-                            }}
+                            onClick={onBot}
                         >
                             bot
                             <span className="count-bot"> ({countBot})</span>
                         </Button>
                     ) : (
-                        <Button variant="outlined" disabled>
+                        <Button
+                            variant="outlined"
+                            className={styles.button_disabled}
+                            disabled
+                        >
                             bot(0)
                         </Button>
                     )}
                 </div>
-                <div className="information">
-                    <Points points={points} />
-                    <h3>
-                        Time left:{" "}
-                        <span className="timer-count">
-                            <Timer>{seconds ?? "-"}</Timer>
-                        </span>
-                    </h3>
-                </div>
+                <Tutorial />
+                <SessionStatus points={points} seconds={seconds} />
             </header>
-
-            <Instruction />
             <section className={styles.game}>
                 <Field
                     isStarted={isStarted}

@@ -1,0 +1,27 @@
+.field {
+    position: relative;
+    border-radius: 4px;
+    padding: 0;
+    margin: 0;
+    background: #1c1c1c;
+    box-shadow: inset 7px 7px 8px #181818,
+        inset -7px -7px 8px #202020;
+}
+
+.field_pc {
+    display: block;
+}
+
+.field_mobile {
+    display: none;
+}
+
+@media (max-width: 1280px) {
+    .field_pc {
+        display: none;
+    }
+
+    .field_mobile {
+        display: block;
+    }
+}

@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
-import Item from "./Item";
-import randomInteger from "./randomInteger";
-import randomFromArray from "./randomFromArray";
-import styles from './Field.module.css';
+import FieldItem from "../FieldItem/FieldItem";
+import styles from "./Field.module.css";
+import { getRandomPosition, randomInteger, randomFromArray } from "../../utils";
 
 export default function Field(props) {
     const field = document.getElementById("field");
@@ -64,12 +63,12 @@ export default function Field(props) {
                 position: "relative",
             }}
         >
-            <img src="./screen.png" className="screen-pc" alt="" />
-            <img src="./screen-mobile.png" className="screen-mobile" alt="" />
+            <img src="./screen.png" className={styles.field_pc} alt="" />
+            <img src="./screen-mobile.png" className={styles.field_mobile} alt="" />
 
             {(items ?? []).map((item) => {
                 return (
-                    <Item key={item.id} item={item} handleClick={onItemClick} />
+                    <FieldItem key={item.id} item={item} handleClick={onItemClick} />
                 );
             })}
         </div>
@@ -120,13 +119,6 @@ const getProbability = (items) => {
     return entity;
 };
 
-const getRandomPosition = (wrapperWidth, wrapperHeight, width, height) => {
-    return {
-        left: randomInteger(0, wrapperWidth - width),
-        top: randomInteger(0, wrapperHeight - height),
-    };
-};
-
 const defaultGameItems = [
     {
         type: "+1",
@@ -136,7 +128,7 @@ const defaultGameItems = [
         style: {
             width: 80,
             height: 80,
-            background: "#fff",
+            background: "#c6e2ff",
             color: "#333",
         },
     },
@@ -148,9 +140,8 @@ const defaultGameItems = [
         style: {
             width: 60,
             height: 60,
-            background: "#faa",
+            background: "#c6e2ff",
             color: "#333",
-            opacity: 0.4,
         },
     },
     {
@@ -161,9 +152,8 @@ const defaultGameItems = [
         style: {
             width: 40,
             height: 40,
-            background: "#ffe",
-            color: "#033",
-            boxShadow: "0 0 3px #ffa500",
+            color: "#333",
+            background: "#ffaa0f",
         },
     },
     {
@@ -174,9 +164,8 @@ const defaultGameItems = [
         style: {
             width: 60,
             height: 60,
-            background: "#afa",
-            color: "#033",
-            boxShadow: "0 0 3px #ffa500",
+            background: "#ffaa0f",
+            color: "#333",
         },
     },
 ];

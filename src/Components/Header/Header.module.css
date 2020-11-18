@@ -1,0 +1,45 @@
+.header {
+    grid-column: 1/3;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    grid-row-gap: 10px;
+    grid-column-gap: 50px;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.buttons button {
+    margin: 0 10px !important;
+    background: none;
+    opacity: 0.9;
+    transition: all 300ms auto;
+    border-radius: 30px !important;
+    white-space: nowrap;
+}
+
+.buttons button:hover {
+    opacity: 1;
+}
+
+
+.button_green {
+    color: #1CD4D4 !important;
+    border: 1px solid #1CD4D4 !important;
+}
+.button_disabled {
+    
+    border: 1px solid #ffffff4f !important;
+    color: #ffffff4f !important;
+}
+.button_white {
+    border: 1px solid #fff !important;
+    color: #fff !important;
+}
+
+.buttons span {
+    opacity: 0.9;
+}

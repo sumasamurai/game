@@ -1,0 +1,71 @@
+.game {
+    position: relative;
+}
+.wrapper {
+    display: grid;
+        grid-template-columns: 1fr 400px;
+        grid-column-gap: 35px;
+        padding-top: 30px;
+}
+.header {
+    grid-column: 1/3;
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    grid-row-gap: 10px;
+    grid-column-gap: 35px;
+}
+
+.buttons {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.buttons button {
+    margin: 0 10px !important;
+    background: none;
+    opacity: 0.9;
+    transition: all 300ms auto;
+    border-radius: 30px !important;
+    white-space: nowrap;
+
+    
+}
+
+.buttons button:hover {
+    opacity: 1;
+}
+
+
+.button_green {
+    color: #1CD4D4 !important;
+    border: 1px solid #1CD4D4 !important;
+}
+.button_disabled {
+    
+    border: 1px solid #ffffff4f !important;
+    color: #ffffff4f !important;
+}
+.button_white {
+    border: 1px solid #fff !important;
+    color: #fff !important;
+}
+
+.buttons span {
+    opacity: 0.9;
+}
+
+@media (max-width:768px) {
+    .wrapper {
+        grid-template-columns: 1fr;
+        grid-gap: 10px;
+        padding-top: 5px;
+    }
+    .header{
+        grid-template-columns: 1fr;
+       grid-column: 1;
+    }
+    .buttons button {
+        margin: 0 2px !important;
+    }  
+}

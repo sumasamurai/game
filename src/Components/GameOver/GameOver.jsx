@@ -17,11 +17,13 @@ export default function GameOver(props) {
         props.onStart();
         window.localStorage.setItem(name, props.points);
     };
-   
 
     return (
         <div className={styles.gameover}>
             <h3>Game Over</h3>
+            <h4>
+                Your points: <span>{props.points}</span>
+            </h4>
             <form className={classes.root} onSubmit={onSumbit}>
                 <TextField
                     id="outlined-basic"
@@ -30,7 +32,12 @@ export default function GameOver(props) {
                     onChange={onChange}
                     className={styles.input}
                 />
-                <input type="submit" value="Submit" required className={styles.submit}/>
+                <input
+                    type="submit"
+                    value="Save result"
+                    required
+                    className={styles.submit}
+                />
             </form>
         </div>
     );
