@@ -48,11 +48,11 @@ export default function MainWrapper() {
         
         if (!window.timerInterval && isStarted && !isPaused) {
             window.pausedTimeBallance = 0;
-            console.log('set new interval..');
+           
             window.timerInterval = 
                 setInterval(() => {
                     if (window.pausedTimeBallance) {
-                        console.log('STOP Interval...', {  t: window.timerInterval, w: window.pausedTimeBallanc });
+                        // console.log('STOP Interval...', {  t: window.timerInterval, w: window.pausedTimeBallanc });
                         clearInterval( window.timerInterval);
                         window.timerInterval = null;
                         return;
@@ -71,12 +71,18 @@ export default function MainWrapper() {
                     }
 
                 }, timerUpdatingPeriod);
+
+                return () => {
+                    clearInterval( window.timerInterval);
+                    window.timerInterval = null;
+                };
         }
     }, [endTime, isStarted, isPaused]);
 
     const onStart = (e) => {
         countRef.current = 0;
-
+        setIsPaused(false);
+        window.pausedTimeBallance = endTime - Date.now();
         //setTimeout(() => {
             setSeconds(startTimeBallance);
             clearTimeout(botTimer);
@@ -101,7 +107,7 @@ export default function MainWrapper() {
     }, []);
 
     const onPause = (e) => {
-        console.log({ W: window.pausedTimeBallance });
+        // console.log({ W: window.pausedTimeBallance });
         if (window.pausedTimeBallance) {
             // continue
             setEndTime(Date.now() + window.pausedTimeBallance);
