@@ -11,7 +11,9 @@ import SessionStatus from "./SessionStatus";
 // Timer "fps"
 const timerUpdatingPeriod = 70;
 const startTimeBallance = 60;
-let timerInterval = null;
+// let timerInterval = null;
+window.pausedTimeBallance = 0;
+window.timerInterval = null;
 
 export default function MainWrapper() {
     const [results, setResults] = useState(
@@ -20,14 +22,15 @@ export default function MainWrapper() {
     const getSeconds = (end) => (end - Date.now()) / 1000;
     const startingTimeLeft = startTimeBallance * 1000;
     const [isStarted, setIsStarted] = useState(false);
+    const [isPaused, setIsPaused] = useState(false);
     const [points, setPoints] = useState(0);
     const [gameOver, setGameOver] = useState(false);
     const [countBot, setCountBot] = useState(0);
     const countRef = useRef(countBot);
     const [endTime, setEndTime] = useState(Date.now() + startingTimeLeft);
     const [seconds, setSeconds] = useState(getSeconds(endTime));
-    const [pausedTimeBallance, setPausedTimeBallance] = useState(0);
-   
+    
+
     let botTimer;
 
     const itemClick = useCallback(
@@ -41,39 +44,51 @@ export default function MainWrapper() {
         [points, endTime]
     );
     useEffect(() => {
-        if (!timerInterval && isStarted) {
-            timerInterval = setInterval(() => {
-                const timeLeft = pausedTimeBallance || getSeconds(endTime);
-                if (timeLeft > 0) {
-                    setSeconds(() => timeLeft);
-                } else {
-                    setSeconds(0);
-                    clearInterval(timerInterval);
-                    setGameOver(true);
-                }
-            }, timerUpdatingPeriod);
-            return () => {
-                clearInterval(timerInterval);
-                timerInterval = null;
-            };
+        console.log({ wt: window.timerInterval });
+        
+        if (!window.timerInterval && isStarted && !isPaused) {
+            window.pausedTimeBallance = 0;
+            console.log('set new interval..');
+            window.timerInterval = 
+                setInterval(() => {
+                    if (window.pausedTimeBallance) {
+                        console.log('STOP Interval...', {  t: window.timerInterval, w: window.pausedTimeBallanc });
+                        clearInterval( window.timerInterval);
+                        window.timerInterval = null;
+                        return;
+                    }
+
+                    const timeLeft = window.pausedTimeBallance || getSeconds(endTime);
+                    console.log({ timeLeft, endTime });
+
+                    if (timeLeft > 0) {
+                        setSeconds(timeLeft);
+                    } else {
+                        setSeconds(0);
+                        clearInterval( window.timerInterval);
+                        window.timerInterval = null;
+                        setGameOver(true); 
+                    }
+
+                }, timerUpdatingPeriod);
         }
-       
-    }, [endTime, isStarted, pausedTimeBallance]);
+    }, [endTime, isStarted, isPaused]);
 
     const onStart = (e) => {
         countRef.current = 0;
 
-        setTimeout(() => {
+        //setTimeout(() => {
             setSeconds(startTimeBallance);
             clearTimeout(botTimer);
             setResults(JSON.parse(JSON.stringify(localStorage)));
             setCountBot(0);
             setPoints(0);
-            setPausedTimeBallance(0);
             setEndTime(Date.now() + startingTimeLeft);
             setGameOver(false);
             setIsStarted(true);
-        }, 50);
+        //}, 50);
+
+        window.pausedTimeBallance = 0;
     };
 
     const onBot = () => {
@@ -86,19 +101,20 @@ export default function MainWrapper() {
     }, []);
 
     const onPause = (e) => {
-        if (pausedTimeBallance) {
-            setPausedTimeBallance(0);
-            setSeconds(pausedTimeBallance);
+        console.log({ W: window.pausedTimeBallance });
+        if (window.pausedTimeBallance) {
+            // continue
+            setEndTime(Date.now() + window.pausedTimeBallance);
+            setIsPaused(false);
         } else {
-            const timeLeft = getSeconds(endTime);
-            setSeconds(timeLeft);
-            setPausedTimeBallance(timeLeft);
+            // pause
+            window.pausedTimeBallance = endTime - Date.now();
+            setIsPaused(true);
         }
     };
 
     function bot() {
         const items = [...document.getElementsByClassName("field_item")];
-
         if (items.length && countRef.current > 0) {
             const good = items.filter((f) => f.innerHTML !== "-1");
             const selected = randomFromArray(good.length ? good : items);
@@ -134,11 +150,11 @@ export default function MainWrapper() {
                             variant="outlined"
                             onClick={onPause}
                         >
-                            {pausedTimeBallance ? "Continue" : "Pause"}
+                            {window.pausedTimeBallance ? "Continue" : "Pause"}
                         </Button>
                     )}
 
-                    {isStarted || pausedTimeBallance ? (
+                    {isStarted || window.pausedTimeBallance ? (
                         <Button
                             variant="outlined"
                             color="secondary"
@@ -164,7 +180,7 @@ export default function MainWrapper() {
                 <Field
                     isStarted={isStarted}
                     itemClick={itemClick}
-                    isPaused={pausedTimeBallance}
+                    isPaused={window.pausedTimeBallance}
                     points={points}
                     gameOver={gameOver}
                     onStart={onStart}
