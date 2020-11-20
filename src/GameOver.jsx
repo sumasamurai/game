@@ -13,9 +13,10 @@ export default function GameOver(props) {
 
     const onSumbit = (e) => {
         e.preventDefault();
-        props.onItemClick();
-        props.onStart();
+      
         window.localStorage.setItem(name, props.points);
+        props.toggleGameOver()
+        props.onStart();
     };
 
     return (

@@ -190,12 +190,12 @@ export default function MainWrapper() {
                     points={points}
                     gameOver={gameOver}
                     onStart={onStart}
-                    onItemClick={toggleGameOver}
+                   
                 />
                 {gameOver && (
                     <GameOver
                         points={points}
-                        onItemClick={toggleGameOver}
+                        toggleGameOver={toggleGameOver}
                         onStart={onStart}
                     />
                 )}
