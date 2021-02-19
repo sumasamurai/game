@@ -2,7 +2,7 @@ React JS Game App
 ===========
 
 ### DEMO
-https://game.gyper.fun/
+https://itstep.gyper.fun/
 
 ### Locally 
 1. Clone down the theme's repository (`git clone https://github.com/Bogarne/game.git`)
